@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="gc,">
+  <meta name="keywords" content="LRU cache,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="知其白，守其黑，为天下式。">
-<meta name="keywords" content="gc">
+<meta name="description" content="常见三种缓存算法：  LRU（least recently used ，最近最少使用) LFU（Least Frequently used ，最不经常使用) FIFO（first in first out ，先进先出)  手写LRU算法，实现方式：LinkedHashMap 核心思路：  每次写入数据时将数据放入链表头结点。 使用数据时候将数据移动到头结点。 缓存数量超过阈值时移除链表尾部数据">
+<meta name="keywords" content="LRU cache">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JVM垃圾回收机制浅析">
-<meta property="og:url" content="http://kaiz.top/2019/11/17/JVM垃圾回收机制浅析/index.html">
+<meta property="og:title" content="常见缓存算法及手写LRU算法">
+<meta property="og:url" content="http://kaiz.top/2019/12/10/常见缓存算法及手写LRU算法/index.html">
 <meta property="og:site_name" content="Kaiz">
-<meta property="og:description" content="知其白，守其黑，为天下式。">
+<meta property="og:description" content="常见三种缓存算法：  LRU（least recently used ，最近最少使用) LFU（Least Frequently used ，最不经常使用) FIFO（first in first out ，先进先出)  手写LRU算法，实现方式：LinkedHashMap 核心思路：  每次写入数据时将数据放入链表头结点。 使用数据时候将数据移动到头结点。 缓存数量超过阈值时移除链表尾部数据">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-11-17T09:26:46.000Z">
+<meta property="og:updated_time" content="2019-12-10T07:56:24.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JVM垃圾回收机制浅析">
-<meta name="twitter:description" content="知其白，守其黑，为天下式。">
+<meta name="twitter:title" content="常见缓存算法及手写LRU算法">
+<meta name="twitter:description" content="常见三种缓存算法：  LRU（least recently used ，最近最少使用) LFU（Least Frequently used ，最不经常使用) FIFO（first in first out ，先进先出)  手写LRU算法，实现方式：LinkedHashMap 核心思路：  每次写入数据时将数据放入链表头结点。 使用数据时候将数据移动到头结点。 缓存数量超过阈值时移除链表尾部数据">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://kaiz.top/2019/11/17/JVM垃圾回收机制浅析/">
+  <link rel="canonical" href="http://kaiz.top/2019/12/10/常见缓存算法及手写LRU算法/">
 
 
 
 
 
-  <title>JVM垃圾回收机制浅析 | Kaiz</title>
+  <title>常见缓存算法及手写LRU算法 | Kaiz</title>
   
 
 
@@ -243,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://kaiz.top/2019/11/17/JVM垃圾回收机制浅析/">
+    <link itemprop="mainEntityOfPage" href="http://kaiz.top/2019/12/10/常见缓存算法及手写LRU算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kaiz">
@@ -260,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JVM垃圾回收机制浅析</h1>
+          <h1 class="post-title" itemprop="name headline">常见缓存算法及手写LRU算法</h1>
         
 
         <div class="post-meta">
@@ -272,8 +272,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-17T17:22:08+08:00">
-                2019-11-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-10T15:48:59+08:00">
+                2019-12-10
               </time>
             
 
@@ -295,8 +295,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/cache/" itemprop="url" rel="index">
+                    <span itemprop="name">cache</span>
                   </a>
                 </span>
 
@@ -332,7 +332,20 @@
       
 
       
-        
+        <p>常见三种缓存算法：</p>
+<ul>
+<li>LRU（least recently used ，最近最少使用)</li>
+<li>LFU（Least Frequently used ，最不经常使用)</li>
+<li>FIFO（first in first out ，先进先出)</li>
+</ul>
+<p>手写LRU算法，实现方式：LinkedHashMap</p>
+<p>核心思路：</p>
+<ul>
+<li>每次写入数据时将数据放入链表头结点。</li>
+<li>使用数据时候将数据<strong>移动到头结点</strong>。</li>
+<li>缓存数量超过阈值时移除链表尾部数据</li>
+</ul>
+
       
     </div>
     
@@ -349,7 +362,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/gc/" rel="tag"># gc</a>
+            <a href="/tags/LRU-cache/" rel="tag"># LRU cache</a>
           
         </div>
       
@@ -362,8 +375,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/17/rabbitmq浅析/" rel="next" title="rabbitmq浅析(简单笔记)">
-                <i class="fa fa-chevron-left"></i> rabbitmq浅析(简单笔记)
+              <a href="/2019/12/10/缓存三连-缓存穿透、缓存雪崩、缓存穿透/" rel="next" title="缓存三连:缓存穿透、缓存雪崩、缓存穿透">
+                <i class="fa fa-chevron-left"></i> 缓存三连:缓存穿透、缓存雪崩、缓存穿透
               </a>
             
           </div>
@@ -372,8 +385,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/11/17/JVM垃圾回收算法浅析/" rel="prev" title="JVM垃圾回收算法浅析">
-                JVM垃圾回收算法浅析 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/04/02/test/" rel="prev" title="test">
+                test <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
