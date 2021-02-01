@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html  lang="zh-Hans" >
+    <head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+    <title>排序-冒泡排序 | Kaiz</title>
+    <meta name="description" content="花一段时间重新把基础排序和查找算法复习一遍。从排序开始，今天第一篇：冒泡排序。  基本思想和时间复杂度  基础实现  优化版本1：通过有序标记减少循环次数  优化版本2：通过有序标记+无序数列边界减少循环次数  鸡尾酒排序：冒泡排序升级版    [ ] 基本思想和时间复杂度  基本思想：将相邻的元素两两比较，当一个元素大于右侧相邻元素时，交换他们的位置；当一个元素小于或等于右侧相邻元素时，位置不变">
+<meta name="keywords" content="排序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="排序-冒泡排序">
+<meta property="og:url" content="http://kaiz.top/2019/06/12/排序-冒泡排序/index.html">
+<meta property="og:site_name" content="Kaiz">
+<meta property="og:description" content="花一段时间重新把基础排序和查找算法复习一遍。从排序开始，今天第一篇：冒泡排序。  基本思想和时间复杂度  基础实现  优化版本1：通过有序标记减少循环次数  优化版本2：通过有序标记+无序数列边界减少循环次数  鸡尾酒排序：冒泡排序升级版    [ ] 基本思想和时间复杂度  基本思想：将相邻的元素两两比较，当一个元素大于右侧相邻元素时，交换他们的位置；当一个元素小于或等于右侧相邻元素时，位置不变">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-06-12T14:34:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="排序-冒泡排序">
+<meta name="twitter:description" content="花一段时间重新把基础排序和查找算法复习一遍。从排序开始，今天第一篇：冒泡排序。  基本思想和时间复杂度  基础实现  优化版本1：通过有序标记减少循环次数  优化版本2：通过有序标记+无序数列边界减少循环次数  鸡尾酒排序：冒泡排序升级版    [ ] 基本思想和时间复杂度  基本思想：将相邻的元素两两比较，当一个元素大于右侧相邻元素时，交换他们的位置；当一个元素小于或等于右侧相邻元素时，位置不变">
+
+    
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/css/common.min.css">
+
+
+    
+    
+    
+    
+        <link href="//cdn.jsdelivr.net/npm/lightgallery.js@1.1.3/dist/css/lightgallery.min.css" rel="stylesheet">
+    
+    
+    <link rel="stylesheet" href="/css/iconfont.min.css">
+    
+</head>
+
+    <body>
+        <header class="header header-fixture">
+    <div class="profile-search-wrap flex sm:block">
+        
+        
+        <div class="profile sm:text-center md:px-1 lg:px-3 sm:pb-4 sm:pt-6">
+            <a id="avatar" role="link" href="https://github.com/fengkx" class="inline-block lg:w-16 lg:h-16 w-8 h-8 m-2" target="_blank" rel="noopener">
+                <img src="https://www.gravatar.com/avatar/0bc83cb571cd1c50ba6f3e8a78ef1346?s=128" class="rounded-full" alt="avatar">
+            </a>
+            <h2 id="name" class="hidden lg:block">fengkx</h2>
+            <h3 id="title" class="hidden xl:block">Student &amp; Coder</h3>
+            
+            <small id="location" class="hidden lg:block">
+                <i class="iconfont icon-map-icon"></i>
+                Guangzhou, China
+            </small>
+            
+        </div>
+        
+        
+<div class="search flex-1 flex lg:inline-block sm:hidden lg:px-4 lg:mt-2 lg:mb-4 lg:w-full">
+    <form id="search-form" class="my-auto flex-1 lg:border lg:border-solid lg:border-gray-200">
+        <div class="input-group table bg-gray-100 lg:bg-white w-full">
+            <input id="search-input" type="text" placeholder="Search" class="inline-block w-full bg-gray-100 lg:bg-white">
+            <span class="table-cell">
+                <button name="search tigger button" disabled>
+                    <i class="iconfont icon-search m-2"></i>
+                </button>
+            </span>
+        </div>
+    </form>
+        
+<script id="search-teamplate" type="text/html" data-path="/content.json">
+    <div>
+        <div class="search-header bg-gray-400">
+            <input id="actual-search-input" model="keyword" ref="input" class="inline-block w-full h-10 px-2 py-1" placeholder="Search" type="text">
+        </div>
+        <div class="search-result bg-gray-200">
+            {{#each searchPosts}}
+            <a href="/{{ path }}" class="result-item block px-2 pb-3 mb-1 pt-1 hover:bg-indigo-100">
+                <i class="iconfont icon-file"></i>
+                <h1 class="result-title inline font-medium text-lg">{{ title }}</h1>
+                <p class="result-content text-gray-600 text-sm">{{{ text }}}</p>
+            </a>
+            {{/each}}
+        </div>
+    </div>
+</script>
+
+</div>
+
+
+        <button name="menu toogle button" id="menu-toggle-btn" class="block sm:hidden p-3" role="button" aria-expanded="false">
+            <i class="iconfont icon-hamburger"></i>
+        </button>
+    </div>
+    <nav id="menu-nav" class="hidden sm:flex flex-col">
+        
+        
+            <div class="menu-item menu-home" role="menuitem">
+                <a href="/.">
+                    <i class="iconfont icon-home" aria-hidden="true"></i>
+                    <span class="menu-title">Home</span>
+                </a>
+            </div>
+        
+        
+            <div class="menu-item menu-archives" role="menuitem">
+                <a href="/archives">
+                    <i class="iconfont icon-archive" aria-hidden="true"></i>
+                    <span class="menu-title">Archives</span>
+                </a>
+            </div>
+        
+        
+            <div class="menu-item menu-categories" role="menuitem">
+                <a href="/categories">
+                    <i class="iconfont icon-folder" aria-hidden="true"></i>
+                    <span class="menu-title">Categories</span>
+                </a>
+            </div>
+        
+        
+            <div class="menu-item menu-tags" role="menuitem">
+                <a href="/tags">
+                    <i class="iconfont icon-tag" aria-hidden="true"></i>
+                    <span class="menu-title">Tags</span>
+                </a>
+            </div>
+        
+        
+            <div class="menu-item menu-repository" role="menuitem">
+                <a href="/repository">
+                    <i class="iconfont icon-project" aria-hidden="true"></i>
+                    <span class="menu-title">Repository</span>
+                </a>
+            </div>
+        
+        
+            <div class="menu-item menu-links" role="menuitem">
+                <a href="/links">
+                    <i class="iconfont icon-friend" aria-hidden="true"></i>
+                    <span class="menu-title">Links</span>
+                </a>
+            </div>
+        
+        
+            <div class="menu-item menu-about" role="menuitem">
+                <a href="/about">
+                    <i class="iconfont icon-cup" aria-hidden="true"></i>
+                    <span class="menu-title">About</span>
+                </a>
+            </div>
+        
+        
+<div class="social-links flex sm:flex-col lg:hidden mt-5">
+    
+        <span class="social-item text-center">
+            <a href="https://github.com/fengkx">
+                <i class="iconfont social-icon icon-github"></i>
+                <span class="menu-title hidden lg:inline">menu.github</span>
+            </a>
+        </span>
+    
+        <span class="social-item text-center">
+            <a href="https://t.me/fengkx">
+                <i class="iconfont social-icon icon-telegram"></i>
+                <span class="menu-title hidden lg:inline">menu.telegram</span>
+            </a>
+        </span>
+    
+        <span class="social-item text-center">
+            <a href="https://twitter.com/example">
+                <i class="iconfont social-icon icon-twitter"></i>
+                <span class="menu-title hidden lg:inline">menu.twitter</span>
+            </a>
+        </span>
+    
+        <span class="social-item text-center">
+            <a href="/atom.xml">
+                <i class="iconfont social-icon icon-rss"></i>
+                <span class="menu-title hidden lg:inline">menu.rss</span>
+            </a>
+        </span>
+    
+</div>
+
+
+    </nav>
+</header>
+
+        <section class="main-section">
+            
+    <main class="flex-1 px-4 py-12 md:px-5 lg:px-8 lg:py-4 relative min-h-screen">
+    
+
+    <article class="content article article-archives article-type-list" itemscope>
+        <header class="article-header">
+            
+    
+        <h1 class="article-title text-lg" itemprop="name">
+            排序-冒泡排序
+        </h1>
+    
+
+
+
+            <p class="article-meta mb-3 text-xs">
+                <span class="article-date">
+    <i class="iconfont icon-calendar-check"></i>
+	<a href="/2019/06/12/排序-冒泡排序/" class="article-date">
+	  <time datetime="2019-06-12T12:52:29.000Z" itemprop="datePublished">Jun 12</time>
+	</a>
+</span>
+
+                
+    <span class="article-category">
+    <i class="iconfont icon-folder"></i>
+    <a class="article-category-link" href="/categories/数据结构与算法/">数据结构与算法</a>
+  </span>
+
+
+                
+    <span class="article-tags">
+    <i class="iconfont icon-tag"></i>
+    <a class="article-tag-link" href="/tags/排序/">排序</a>
+  </span>
+
+
+                <span class="_partial/post-comment"><i class="icon icon-comment"></i>
+                    <a href="/2019/06/12/排序-冒泡排序/#comments" class="article-comment-link">
+                        Comments
+                    </a>
+                </span>
+                
+
+            </p>
+        </header>
+        <div class="marked-body article-body">
+            <p>花一段时间重新把基础排序和查找算法复习一遍。从排序开始，今天第一篇：冒泡排序。</p>
+<ul>
+<li><p>基本思想和时间复杂度</p>
+</li>
+<li><p>基础实现</p>
+</li>
+<li><p>优化版本1：通过有序标记减少循环次数</p>
+</li>
+<li><p>优化版本2：通过有序标记+无序数列边界减少循环次数</p>
+</li>
+<li><p>鸡尾酒排序：冒泡排序升级版</p>
+</li>
+</ul>
+<ul>
+<li><p>[ ] 基本思想和时间复杂度</p>
+<ol>
+<li>基本思想：将相邻的元素两两比较，当一个元素大于右侧相邻元素时，交换他们的位置；当一个元素小于或等于右侧相邻元素时，位置不变。</li>
+<li>时间复杂度：冒泡排序每一轮都要遍历所有元素，两层循环，总共遍历(元素数量-1)轮，所以平均时间复杂度为O(n2) (n的平方哈。typora没搞定平方符号。。。) 。</li>
+<li>稳定排序：两个值相等的元素不会打乱原本的顺序。</li>
+</ol>
+</li>
+</ul>
+<ul>
+<li><p>[ ] 基本实现</p>
+<p>无序数列{5，8，6，3，9，2，1，7}</p>
+<p>|  5   |   8   |   6   |   3   |   9   |   2   |   1   |   7   | 原始顺序                    |<br>| :–: | :—: | :—: | :—: | :—: | :—: | :—: | :—: | ————————— |<br>|  5   |   6   |   3   |   8   |   2   |   1   |   7   | <strong>9</strong> | 第一轮 有序区为 9           |<br>|  5   |   3   |   6   |   2   |   1   |   7   | <strong>8</strong> | <strong>9</strong> | 第二轮 有序区为8 9          |<br>|  3   |   5   |   2   |   1   |   6   | <strong>7</strong> | <strong>8</strong> | <strong>9</strong> | 第三轮有序区为7 8 9         |<br>|  3   |   2   |   1   |   5   | <strong>6</strong> | <strong>7</strong> | <strong>8</strong> | <strong>9</strong> | 第四轮有序区为6 7 8 9       |<br>|  2   |   1   |   3   | <strong>5</strong> | <strong>6</strong> | <strong>7</strong> | <strong>8</strong> | <strong>9</strong> | 第五轮有序区为5 6 7 8 9     |<br>|  1   |   2   | <strong>3</strong> | <strong>5</strong> | <strong>6</strong> | <strong>7</strong> | <strong>8</strong> | <strong>9</strong> | 第六轮有序区为3 5 6 7 8 9   |<br>|  1   | <strong>2</strong> | <strong>3</strong> | <strong>5</strong> | <strong>6</strong> | <strong>7</strong> | <strong>8</strong> | <strong>9</strong> | 第七轮有序区为2 3 5 6 7 8 9 |</p>
+<p>代码实现如下：双层循环，外部循环控制循环次数，内部循环进行每一次冒泡处理，先进行元素比较，再进行元素交换。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BubbleSort</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span> arrary[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;arrary.length - <span class="number">1</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j&lt;arrary.length -i -<span class="number">1</span>;j++)&#123;</span><br><span class="line">                <span class="keyword">int</span> tmp = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span> (arrary[j] &gt; arrary[j+<span class="number">1</span>])&#123;</span><br><span class="line">                    tmp = arrary[j];</span><br><span class="line">                    arrary[j] = arrary[j+<span class="number">1</span>];</span><br><span class="line">                    arrary[j+<span class="number">1</span>] = tmp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] array = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">5</span>,<span class="number">8</span>,<span class="number">6</span>,<span class="number">3</span>,<span class="number">9</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">7</span>&#125;;</span><br><span class="line">        sort(array);</span><br><span class="line">        System.out.println(Arrays.toString(array));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>[ ] 优化版本1：通过有序标记减少循环次数</p>
+<p>回头看上面基本实现中，当排序进行到第六轮时其实当前数列已经是有序的了，但是排序算法依旧执行了第七次，对1和2进行了排序。</p>
+<p>所以，优化点在于如何在每次排序后判断当前数列是否有序，有序的话我就直接跳出最外层循环结束排序。如何做？即在每次内层循环(实际进行冒泡排序的循环)开始前，初始化一个有序标记 isSorted来作为有序无序的标志。</p>
+<p>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BubbleSort</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span> arrary[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;arrary.length - <span class="number">1</span>;i++)&#123;</span><br><span class="line">            <span class="comment">//有序标记，每一轮初始值为true ,默认有序</span></span><br><span class="line">            <span class="keyword">boolean</span> isSorted = <span class="keyword">true</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j&lt;arrary.length -i -<span class="number">1</span>;j++)&#123;</span><br><span class="line">                <span class="keyword">int</span> tmp = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span> (arrary[j] &gt; arrary[j+<span class="number">1</span>])&#123;</span><br><span class="line">                    tmp = arrary[j];</span><br><span class="line">                    arrary[j] = arrary[j+<span class="number">1</span>];</span><br><span class="line">                    arrary[j+<span class="number">1</span>] = tmp;</span><br><span class="line">                    <span class="comment">//执行上面的逻辑代表还有元素进行交换了，所以不是有序的，有序标记设置为false</span></span><br><span class="line">                    isSorted = <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//在外层循环内判断有序标记，有序true直接结束循环，无序false则继续下一轮</span></span><br><span class="line">            <span class="keyword">if</span> (isSorted)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] array = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">5</span>,<span class="number">8</span>,<span class="number">6</span>,<span class="number">3</span>,<span class="number">9</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">7</span>&#125;;</span><br><span class="line">        sort(array);</span><br><span class="line">        System.out.println(Arrays.toString(array));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样，当执行完第六轮排序时，有序标记为true，因为 1 2 3 5 6 7 8 9 已然有序，不会进入内层循环的元素交换逻辑，直接跳出外层大循环，省去第七次排序。</p>
+</li>
+<li><p>[ ] 优化版本2：通过有序标记+无序数列边界减少循环次数</p>
+<p>我们换一个数列说明情况, 新的排序数列{3，4，2，1，5，6，7，8}</p>
+<p>这次不用表格示意了，我们直接话述。</p>
+<p>第一轮排序：</p>
+<p>元素3和4比较，位置不变</p>
+<p>元素4和2比较，交换位置</p>
+<p>元素4和1比较，交换位置</p>
+<p>元素4和5比较，位置不变</p>
+<p>元素5和6比较，位置不变</p>
+<p>元素6和7比较，位置不变</p>
+<p>元素7和8比较，位置不变</p>
+<p><strong>第一轮排序结果为：{3，2，1，4，5，6，7，8}，有序区为8</strong></p>
+</li>
+</ul>
+<p>  第二次排序：</p>
+<p>  元素3和2比较，交换位置</p>
+<p>  元素3和1比较，交换位置</p>
+<p>  元素3和4比较，位置不变</p>
+<p>  元素4和5比较，位置不变</p>
+<p>  元素5和6比较，位置不变</p>
+<p>  元素6和7比较，位置不变</p>
+<p>  元素7和8比较，位置不变</p>
+<p>  <strong>第二轮排序结果为：{2，1，3，4，5，6，7，8}，有序区为 7 8</strong> </p>
+<p>  第三次排序：1，2，3，4，5，6，7，8</p>
+<p>  。。。。。省略</p>
+<p>  问题发现没，数列中5 6 7 8其实一直是有序的，但是每轮排序都比较了。</p>
+<p>  问题关键点在于要<strong>对数列有序区进行界定</strong>。</p>
+<p>  按照现有的排序逻辑，有序区的长度和排序的轮数是相等的。我每进行一次排序，有序区肯定会增加一个有序数列。第1轮排序后的有序区长度是1，第2轮排序后的有序长度是2.。。。。。</p>
+<p>  但是，数列实际的有序区可能会大于这个长度，比如上面的数列，在第2轮排序时，后面的5个元素已经都是有序的了。我们可以在每一轮排序后，记录下来最后一次元素交换的位置，该位置即为无序数列的边界，从这个边界往后全部认为是有序的，不需要进行循环比对排序了。</p>
+<p>  (好好体会一下。设置无序边界 和 设置有序标记的区别)</p>
+<p>  优化代码如下：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BubbleSort</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span> arrary[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;arrary.length - <span class="number">1</span>;i++)&#123;</span><br><span class="line">            <span class="comment">//有序标记，每一轮初始值为true ,默认有序</span></span><br><span class="line">            <span class="keyword">boolean</span> isSorted = <span class="keyword">true</span>;</span><br><span class="line">            <span class="comment">//无序数列的边界，每次比较到这就结束</span></span><br><span class="line">            <span class="keyword">int</span> sortBorder = arrary.length - <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j&lt;sortBorder; j++)&#123;</span><br><span class="line">                <span class="keyword">int</span> tmp = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span> (arrary[j] &gt; arrary[j+<span class="number">1</span>])&#123;</span><br><span class="line">                    tmp = arrary[j];</span><br><span class="line">                    arrary[j] = arrary[j+<span class="number">1</span>];</span><br><span class="line">                    arrary[j+<span class="number">1</span>] = tmp;</span><br><span class="line">                    <span class="comment">//执行上面的逻辑代表还有元素进行交换了，所以不是有序的，有序标记设置为false</span></span><br><span class="line">                    isSorted = <span class="keyword">false</span>;</span><br><span class="line">                    <span class="comment">//将当前无序数列的边界更新为最后一次交换元素的位置</span></span><br><span class="line">                    sortBorder = j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//在外层循环内判断有序标记，有序true直接结束循环，无序false则继续下一轮</span></span><br><span class="line">            <span class="keyword">if</span> (isSorted)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] array = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">3</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>&#125;;</span><br><span class="line">        sort(array);</span><br><span class="line">        System.out.println(Arrays.toString(array));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>[ ] 鸡尾酒排序：冒泡排序升级版</p>
+<p>冒泡排序可以根据自身大小一点一点向着数组的一侧移动，其每一轮都是从左到右来比较元素，即单向位置交换。</p>
+<p>鸡尾酒排序之所以说事冒泡排序的升级版也可以说是另一个优化版本，是因为其元素比较和交换过程是双向的。</p>
+<p>我们拿数列{2，3，4，5，6，7，8，1}举例，将这个数列从小到大排序。</p>
+<p>如果按照冒泡排序会有什么问题？(不画图不描述了，自己debug一下冒泡排序就很清晰了~)</p>
+<p>大家可以发现其实这个数列 前面7个元素都是有序的，只不过最后有一个1这个最小的，这样就会导致如果使用简单的冒泡排序就会进行7轮排序~~</p>
+<p>上面我们也说了冒泡排序是单向的，只能从左往右。而鸡尾酒排序是双向的，怎么个双向法？</p>
+<p>鸡尾酒排序的思路其实就像钟摆一样，第一轮从左往右排序，第二轮从右往左排序，第三轮又从左往右排序，第四轮又从右往左排序~</p>
+<p><strong>如果使用鸡尾酒排序会是什么效果：</strong></p>
+<p>第1轮：和冒泡排序一样从左往右排序，最终会使8和1交换，排序结果为：2，3，4，5，6，7，1，8。<strong>右侧有序区数列只有 ”8“</strong></p>
+<p>第2轮：从右往左排序，即从倒数第二位(无序区第一位，记住！从右往左排的)，这样元素”1”就会慢慢慢慢的跑到第一位，排序结果为 1，2，3，4，5，6，7，8 。<strong>左侧有序区为元素”1“，右侧有序区为元素”8“</strong></p>
+<p>第3轮：从左往右排序（虽然实际上已经有序了，但是流程没有结束，第三轮还得继续），此时就会发现1和2比较位置不变，2和3比较位置不变，3和4比较，位置不变。。。。。最后发现没有元素位置进行交换，证明已经有序，排序结束。</p>
+<p>只需要三轮排序就可以结束~</p>
+<p>代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BubbleSort4</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span> array[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;array.length/<span class="number">2</span>; i++)&#123;</span><br><span class="line">            <span class="comment">//有序标记，每一轮初始值为true ,默认有序</span></span><br><span class="line">            <span class="keyword">boolean</span> isSorted = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//奇数轮排序，从左往右比较和交换</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j=i; j&lt;array.length-i-<span class="number">1</span>; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span> (array[j] &gt; array[j+<span class="number">1</span>])&#123;</span><br><span class="line">                    tmp = array[j];</span><br><span class="line">                    array[j] = array[j+<span class="number">1</span>];</span><br><span class="line">                    array[j+<span class="number">1</span>] = tmp;</span><br><span class="line">                    <span class="comment">//执行上面的逻辑代表还有元素进行交换了，所以不是有序的，有序标记设置为false</span></span><br><span class="line">                    isSorted = <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//在外层循环内判断有序标记，有序true直接结束循环，无序false则继续下一轮</span></span><br><span class="line">            <span class="keyword">if</span> (isSorted)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//在偶数轮排序前，先将isSorted重新标记为true</span></span><br><span class="line">            isSorted = <span class="keyword">true</span>;</span><br><span class="line">            <span class="comment">//偶数轮排序，从右往左比较和交换</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=array.length-i-<span class="number">1</span>; j&gt;i; j--)&#123;</span><br><span class="line">                <span class="keyword">if</span> (array[j] &lt; array[j-<span class="number">1</span>])&#123;</span><br><span class="line">                    tmp = array[j];</span><br><span class="line">                    array[j] = array[j-<span class="number">1</span>];</span><br><span class="line">                    array[j-<span class="number">1</span>] = tmp;</span><br><span class="line">                    <span class="comment">//执行上面的逻辑代表还有元素进行交换了，所以不是有序的，有序标记设置为false</span></span><br><span class="line">                    isSorted = <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//在外层循环内判断有序标记，有序true直接结束循环，无序false则继续下一轮</span></span><br><span class="line">            <span class="keyword">if</span> (isSorted)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] array = <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">1</span>&#125;;</span><br><span class="line">        sort(array);</span><br><span class="line">        System.out.println(Arrays.toString(array));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>鸡尾酒排序的原是实现，代码外层大循环控制排序回合，大循环内包含2个小循环，第一个小循环从左往右比较并交换元素，第二个小循环从右往左比较并交换元素。</p>
+</li>
+</ul>
+<p>鸡尾酒排序优缺点：</p>
+<p>优点：在特定条件下，减少排序的回合数。</p>
+<p>缺点：代码量增加了一倍</p>
+<p>使用场景：大部分元素已经有序的前提下</p>
+
+        </div>
+        
+<blockquote class="copyright">
+    <p><strong>Link to this article : </strong><a class="permalink" href="http://kaiz.top/2019/06/12/排序-冒泡排序/">http://kaiz.top/2019/06/12/排序-冒泡排序/</a></p>
+    <p><strong>This article is available under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a> License</strong></p>
+</blockquote>
+
+
+    </article>
+    
+    <section id="comments">
+        
+    </section>
+
+
+    
+
+</main>
+
+
+<aside style id="sidebar" class="aside aside-fixture">
+    <div class="toc-sidebar">
+        <nav id="toc" class="article-toc">
+            <h3 class="toc-title">Catalogue</h3>
+            
+        </nav>
+    </div>
+</aside>
+
+
+
+
+
+        </section>
+        <footer class="hidden lg:block fixed bottom-0 left-0 sm:w-1/12 lg:w-1/6 bg-gray-100 z-40">
+    
+    <div class="footer-social-links">
+        
+            <a href="https://github.com/fengkx">
+                <i class="iconfont icon-github"></i>
+            </a>
+        
+            <a href="https://t.me/fengkx">
+                <i class="iconfont icon-telegram"></i>
+            </a>
+        
+            <a href="https://twitter.com/example">
+                <i class="iconfont icon-twitter"></i>
+            </a>
+        
+            <a href="/atom.xml">
+                <i class="iconfont icon-rss"></i>
+            </a>
+        
+    </div>
+    
+    
+</footer>
+
+        <div id="mask" class="hidden mask fixed inset-0 bg-gray-900 opacity-75 z-40"></div>
+        <div id="search-view-container" class="hidden shadow-xl"></div>
+        <script src="/js/dom-event.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/yox@1.0.0-alpha.121/dist/standard/prod/yox.min.js"></script>
+
+<script src="/js/search.min.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/lightgallery.js@1.1.3/dist/js/lightgallery.min.js"></script>
+    <script src="/js/light-gallery.min.js"></script>
+
+
+
+
+    </body>
+</html>
